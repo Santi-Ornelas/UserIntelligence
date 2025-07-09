@@ -1,0 +1,18 @@
+# Byte-compiled / cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Data files
+data/raw/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS crap
+.DS_Store
