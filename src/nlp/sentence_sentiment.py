@@ -6,20 +6,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def analyze_sentences(text: str, min_sentence_length: int = 3) -> List[Dict[str, Any]]:
+def analyze_sentences(text: str, min_sentence_length: int = 3) -> Dict[str, Any]:
     """
-    Splits text into sentences and returns sentiment analysis for each.
-    
-    Args:
-        text (str): Input text to analyze
-        min_sentence_length (int): Minimum word count for a sentence to be analyzed
-        
-    Returns:
-        List[Dict[str, Any]]: List of dictionaries containing sentence analysis
-            Each dict has keys: 'sentence', 'polarity', 'subjectivity', 'word_count'
-            
-    Raises:
-        ValueError: If text is empty or None
+    Splits text into sentences and returns both sentence-level sentiment analysis
+    and a summary with average polarity/subjectivity.
     """
     if not text or not text.strip():
         raise ValueError("Text cannot be empty or None")
@@ -27,12 +17,14 @@ def analyze_sentences(text: str, min_sentence_length: int = 3) -> List[Dict[str,
     try:
         blob = TextBlob(text.strip())
         sentence_results = []
+        total_polarity = 0
+        total_subjectivity = 0
+        count = 0
 
         for sentence in blob.sentences:
             sentence_text = str(sentence).strip()
             word_count = len(sentence_text.split())
             
-            # Skip very short sentences
             if word_count < min_sentence_length:
                 logger.debug(f"Skipping short sentence: '{sentence_text}' ({word_count} words)")
                 continue
@@ -47,9 +39,21 @@ def analyze_sentences(text: str, min_sentence_length: int = 3) -> List[Dict[str,
                 "word_count": word_count
             })
 
+            total_polarity += polarity
+            total_subjectivity += subjectivity
+            count += 1
+
         logger.info(f"Analyzed {len(sentence_results)} sentences from text")
-        return sentence_results
-        
+
+        # Return both raw sentences and aggregate summary
+        return {
+            "sentences": sentence_results,
+            "summary": {
+                "avg_polarity": round(total_polarity / count, 4) if count else 0,
+                "avg_subjectivity": round(total_subjectivity / count, 4) if count else 0
+            }
+        }
+
     except Exception as e:
         logger.error(f"Error analyzing sentences: {str(e)}")
         raise
