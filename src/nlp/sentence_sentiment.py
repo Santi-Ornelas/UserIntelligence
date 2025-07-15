@@ -100,11 +100,11 @@ if __name__ == "__main__":
 
     try:
         results = analyze_sentences(text)
-        summary = get_sentiment_summary(results)
+        summary = get_sentiment_summary(results["sentences"])
 
         print("📊 Sentence Sentiment Analysis Results:\n")
         
-        for i, r in enumerate(results, 1):
+        for i, r in enumerate(results["sentences"], 1):
             sentiment_emoji = "😊" if r['polarity'] > 0.1 else "😞" if r['polarity'] < -0.1 else "😐"
             print(f"{i}. {sentiment_emoji} Sentence: {r['sentence']}")
             print(f"   → Polarity: {r['polarity']}, Subjectivity: {r['subjectivity']} ({r['word_count']} words)\n")

@@ -116,7 +116,7 @@ def plot_reviewer_segmentation(reviewer_df: pd.DataFrame):
 if __name__ == "__main__":
     print("📁 Loading sample data...")
 
-    file_path = os.path.join("..", "..", "data", "raw", "luxury_beauty_reviews.json")
+    file_path = os.path.join("data", "raw", "luxury_beauty_reviews.json")
     cleaned_data = []
     with open(file_path, "r") as f:
         for i, line in enumerate(f):
